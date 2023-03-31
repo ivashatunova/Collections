@@ -36,10 +36,9 @@ public class Game {
         }
     }
 
-    public List<Player> findAll() {
+    public List<Player> findAllPlayers() {
         return players;
     }
-
 }
 
 
