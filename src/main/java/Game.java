@@ -1,8 +1,9 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Game {
-    ArrayList<Player> players = new ArrayList<>();
+    HashMap<String, Player> players = new HashMap<>();
 
     /**
      * Метод регистрации игрока, если игрок не зарегистрирован,
@@ -12,16 +13,18 @@ public class Game {
      */
 
     public void register(Player player) {
-        players.add(player);
+        if (players.get(player.getName()) != null) {
+            throw new AlreadyRegisteredException("Player with name: " + player.getName() + " is already registered");
+        }
+        players.put(player.getName(), player);
     }
 
     public Player findByName(String name) {
-        for (int i = 0; i < players.size(); i++) {
-            if (players.get(i).getName().equals(name)) {
-                return players.get(i);
-            }
+        Player player = players.get(name);
+        if (player == null) {
+            throw new NotRegisteredException("Player with name: " + name + " is not registered");
         }
-        throw new NotRegisteredException("Player with name: " + name + " is not registered");
+        return player;
     }
 
     public int round(String playerName1, String playerName2) {
@@ -36,9 +39,10 @@ public class Game {
         }
     }
 
-    public List<Player> findAllPlayers() {
+    public HashMap<String, Player> findAllPlayers() {
         return players;
     }
 }
+
 
 

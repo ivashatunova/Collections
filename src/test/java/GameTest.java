@@ -3,12 +3,13 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class GameTest {
     Player player1 = new Player(1, "Ivan", 8);
     Player player2 = new Player(2, "Geo", 7);
-    Player player3 = new Player(3, "Geo", 10);
+    Player player3 = new Player(3, "Hui", 10);
     Player player4 = new Player(4, "Rus", 0);
     Player player5 = new Player(5, "Lui", 7);
     Player player6 = new Player(6, "Mia", 8);
@@ -29,14 +30,19 @@ public class GameTest {
         Game game = new Game();
         game.register(player1);
         game.register(player2);
-        List<Player> actual = Arrays.asList(player1, player2);
-//        List<Player> actual = new ArrayList<>();
-//        actual.add(player1);
-//        actual.add(player2);
-        List<Player> expected = game.findAllPlayers();
+        HashMap<String, Player> actual = new HashMap<>();
+        actual.put(player1.getName(), player1);
+        actual.put(player2.getName(), player2);
 
-        Assertions.assertIterableEquals(expected, actual);
+        HashMap<String, Player> expected = game.findAllPlayers();
+
+        Assertions.assertNotNull(expected);
+        Assertions.assertEquals(expected.size(), actual.size());
+        Assertions.assertTrue(expected.keySet().containsAll(actual.keySet()));
+        Assertions.assertEquals(player1, actual.get(player1.getName()));
+        Assertions.assertEquals(player2, actual.get(player2.getName()));
     }
+
 
     @Test
     public void shouldFindByName() {
@@ -52,6 +58,15 @@ public class GameTest {
         Game game = fillPlayers();
         Assertions.assertThrows(NotRegisteredException.class, () -> {
             game.findByName("NotFound");
+        });
+    }
+
+    @Test
+    public void shouldNotRegister() {
+        Game game = new Game();
+        game.register(player1);
+        Assertions.assertThrows(AlreadyRegisteredException.class, () -> {
+            game.register(player1);
         });
     }
 
